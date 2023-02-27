@@ -7,3 +7,5 @@ node_modules/
 
 # Generated code
 build/
+
+docker-compose.yml
