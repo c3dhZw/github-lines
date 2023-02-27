@@ -1,4 +1,4 @@
-import * as fetch from "node-fetch";
+import fetch from "node-fetch";
 import { isFilled } from "ts-is-present"; // https://github.com/microsoft/TypeScript/issues/16069
 
 import { LineData, IMessageData } from "./types_core";
@@ -52,14 +52,20 @@ export class Core {
     let lines;
     let filename = match[3];
     if (type === "GitHub") {
-      const resp = await fetch(`https://raw.githubusercontent.com/${match[1]}/${match[2]}/${filename}`);
+      const resp = await fetch(`https://raw.githubusercontent.com/${match[1]}/${match[2]}/${filename}`, {
+        method: "GET",
+        headers: this.authHeaders
+      });
       if (!resp.ok) {
         return null; // TODO: fallback to API
       }
       const text = await resp.text();
       lines = text.split("\n");
     } else if (type === "GitLab") {
-      const resp = await fetch(`https://gitlab.com/${match[1]}/-/raw/${match[2]}/${filename}`);
+      const resp = await fetch(`https://gitlab.com/${match[1]}/-/raw/${match[2]}/${filename}`, {
+        method: "GET",
+        headers: this.authHeaders
+      });
       if (!resp.ok) {
         return null; // TODO: fallback to API
       }
@@ -69,7 +75,10 @@ export class Core {
       const dotFilename = filename.replace(/-([^-]*)$/, ".$1");
       let text;
       if (match[2].length) {
-        const resp = await fetch(`https://gist.githubusercontent.com/${match[1]}/raw/${match[2]}/${dotFilename}`);
+        const resp = await fetch(`https://gist.githubusercontent.com/${match[1]}/raw/${match[2]}/${dotFilename}`, {
+          method: "GET",
+          headers: this.authHeaders
+        });
         if (!resp.ok) {
           return null; // TODO: fallback to API
         }
@@ -86,7 +95,9 @@ export class Core {
         text =
           json.files[dotFilename]?.content ||
           json.files[
-            Object.keys(json.files).find((key) => key.toLowerCase().replace(/\W+/g, "-") === filename.toLowerCase())
+            Object.keys(json.files).find(
+              (key) => key.toLowerCase().replace(/\W+/g, "-") === filename.toLowerCase()
+            ) as any
           ]?.content; // this madness allows for matching filenames with weird chars
 
         if (!text) {

@@ -1,8 +1,8 @@
-import * as dotenv from "dotenv"
-dotenv.config()
+import * as dotenv from "dotenv";
+dotenv.config();
 
-import { expect } from "chai"
-import { Core } from "../src/core/core"
+import { expect } from "chai";
+import { Core } from "../src/core/core";
 
 const { GITHUB_TOKEN } = process.env;
 const core = new Core(GITHUB_TOKEN);
@@ -59,7 +59,8 @@ describe("Test link matching and fetching (core.handleMessage)", () => {
   });
 
   it("Gist revison single line", async () => {
-    const url = "https://gist.github.com/diogoscf/6878f91e9d5250f0a89518f0301ae1a4/3a556c88296c5ba796a8f464f3838970d689c9fd#file-bot-test-js-L1";
+    const url =
+      "https://gist.github.com/diogoscf/6878f91e9d5250f0a89518f0301ae1a4/3a556c88296c5ba796a8f464f3838970d689c9fd#file-bot-test-js-L1";
     const { msgList, totalLines } = await core.handleMessage(url);
     expect(totalLines).to.equal(1);
     expect(msgList.length).to.equal(1);
@@ -69,7 +70,8 @@ describe("Test link matching and fetching (core.handleMessage)", () => {
   });
 
   it("Gist revision multi-line", async () => {
-    const url = "https://gist.github.com/diogoscf/6878f91e9d5250f0a89518f0301ae1a4/3a556c88296c5ba796a8f464f3838970d689c9fd#file-bot-test-py-L1-L2";
+    const url =
+      "https://gist.github.com/diogoscf/6878f91e9d5250f0a89518f0301ae1a4/3a556c88296c5ba796a8f464f3838970d689c9fd#file-bot-test-py-L1-L2";
     const { msgList, totalLines } = await core.handleMessage(url);
     expect(totalLines).to.equal(2);
     expect(msgList.length).to.equal(1);
@@ -79,7 +81,8 @@ describe("Test link matching and fetching (core.handleMessage)", () => {
   });
 
   it("Gist revision multi-line with tilde", async () => {
-    const url = "https://gist.github.com/diogoscf/6878f91e9d5250f0a89518f0301ae1a4/3a556c88296c5ba796a8f464f3838970d689c9fd#file-bot-test-py-L1~L2";
+    const url =
+      "https://gist.github.com/diogoscf/6878f91e9d5250f0a89518f0301ae1a4/3a556c88296c5ba796a8f464f3838970d689c9fd#file-bot-test-py-L1~L2";
     const { msgList, totalLines } = await core.handleMessage(url);
     expect(totalLines).to.equal(2);
     expect(msgList.length).to.equal(1);
@@ -109,7 +112,8 @@ describe("Test link matching and fetching (core.handleMessage)", () => {
   });
 
   it("Multi-snippet", async () => {
-    const msg = "https://gitlab.com/diogoscf/github-lines-test/-/blob/master/test.txt#L1-2" +
+    const msg =
+      "https://gitlab.com/diogoscf/github-lines-test/-/blob/master/test.txt#L1-2" +
       "https://gist.github.com/diogoscf/6878f91e9d5250f0a89518f0301ae1a4#file-bot-test-js-L1";
     const { msgList, totalLines } = await core.handleMessage(msg);
     expect(totalLines).to.equal(3);
@@ -121,4 +125,4 @@ describe("Test link matching and fetching (core.handleMessage)", () => {
     expect(msgList[1].extension).to.equal("js");
     expect(msgList[1].toDisplay).to.equal('console.log("hello-rev")');
   });
-})
+});
